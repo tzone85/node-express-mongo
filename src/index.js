@@ -12,5 +12,10 @@ app.use(personRoute);
 app.use(express.static('public'));
 
 
+
+// for a 404 handler for resource not found
+app.use((req, res, next) => {
+    res.status(404).send('We think you are lost');
+});
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.info(`Server has started on ${PORT}`));
