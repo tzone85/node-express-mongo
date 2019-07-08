@@ -1,18 +1,23 @@
 let express = require('express');
-
 let app = express();
 let personRoute = require('./routes/person');
+let customerRoute = require('./routes/customer');
 let path = require('path');
+let bodyParser = require('body-parser');
+
+app.use(bodyParser.json())
 
 app.use((req, res, next) => {
+    // console.log(`${new Date().toString()} => ${req.originalUrl}`, req.body); // when making use of the body-parser
+
     console.log(`${new Date().toString()} => ${req.originalUrl}`);
+
     // res.send(''); // if you want to send back a response
     next(); // in order for the next request to be called.
 });
 app.use(personRoute);
+app.use(customerRoute);
 app.use(express.static('public'));
-
-
 
 // for a 404 handler for Resource Not Found
 app.use((req, res, next) => {
