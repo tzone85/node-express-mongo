@@ -11,8 +11,6 @@ app.use((req, res, next) => {
 app.use(personRoute);
 app.use(express.static('public'));
 
-
-
 // for a 404 handler for resource not found
 app.use((req, res, next) => {
     res.status(404).send('We think you are lost');
