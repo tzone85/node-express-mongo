@@ -1,0 +1,31 @@
+@startuml sequence_create
+title Sequence — POST /api/persons
+
+skinparam shadowing false
+
+actor Client
+participant "persons router" as Router
+participant "personCreateSchema\n(zod)" as Zod
+participant "Person model" as Model
+database "MongoDB" as Mongo
+
+Client -> Router : POST /api/persons {name, age, email}
+Router -> Zod : safeParse(body)
+alt invalid
+  Zod --> Router : {success:false, issues}
+  Router --> Client : 400 validation failed
+else valid
+  Zod --> Router : {success:true, data}
+  Router -> Model : Person.create(data)
+  Model -> Mongo : insert
+  alt duplicate email
+    Mongo --> Model : E11000
+    Model --> Router : throws (err.code === 11000)
+    Router --> Client : 409 email already exists
+  else ok
+    Mongo --> Model : inserted doc
+    Model --> Router : doc
+    Router --> Client : 201 toJSON(doc)
+  end
+end
+@enduml

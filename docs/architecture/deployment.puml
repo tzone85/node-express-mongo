@@ -1,0 +1,19 @@
+@startuml deployment
+title Deployment — api + mongo via compose
+
+skinparam shadowing false
+
+cloud "Clients" as clients
+node "Docker host" {
+  node "api :5000" as api {
+    [node 20 + Express + mongoose]
+  }
+  database "mongo :27017" as mongo {
+    [MongoDB 7]
+    folder "mongodata\n(volume)"
+  }
+}
+
+clients --> api : HTTPS
+api --> mongo : mongodb://mongo:27017/persons
+@enduml

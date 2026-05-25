@@ -1,0 +1,43 @@
+@startuml component
+title node-express-mongo — Component Architecture
+
+skinparam componentStyle rectangle
+skinparam shadowing false
+
+actor Client
+
+package "src/" {
+  [server.js\n(entry)] as server
+  [createApp\n(composition root)] as app
+  [persons router\nGET / POST / GET:id / PATCH:id / DELETE:id] as router
+  [validate-person\n(zod)] as zod
+  [Person model\n(Mongoose schema)] as model
+  [connect.js\n(retry loop)] as connect
+  [loadConfig\n(zod env)] as cfg
+}
+
+database "MongoDB" as mongo
+
+Client --> app : HTTP
+app --> router
+router --> zod : safeParse(body)
+router --> model : find / findById / create / update / delete
+model --> mongo : driver
+server --> cfg : loadConfig()
+server --> connect : connectMongo(url, retries)
+connect --> mongo
+server --> app : createApp()
+
+note bottom of model
+  - email unique (409 on dup)
+  - timestamps auto
+  - toJSON projects _id → id, drops __v
+end note
+
+note right of router
+  All routes return JSON:
+   200 ok, 201 created, 204 deleted,
+   400 invalid body / objectid,
+   404 not found, 409 dup email.
+end note
+@enduml

@@ -1,20 +1,32 @@
 {
-  "name": "rest-api-workshop",
+  "name": "node-express-mongo",
+  "private": true,
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Person REST API — Express + Mongoose + zod + Vitest + Docker.",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "main": "src/server.js",
   "scripts": {
-    "start-watch": "nodemon src/index.js",
-    "start": "node src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest",
+    "lint": "eslint ."
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "mongoose": "^8.9.4",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
-    "nodemon": "^1.19.1"
-  }
+    "@eslint/js": "^9.18.0",
+    "@vitest/coverage-v8": "^2.1.8",
+    "eslint": "^9.18.0",
+    "globals": "^15.14.0",
+    "mongodb-memory-server": "^10.1.4",
+    "supertest": "^7.0.0",
+    "vitest": "^2.1.8"
+  },
+  "license": "MIT"
 }
